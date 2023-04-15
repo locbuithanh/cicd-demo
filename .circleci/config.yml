@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   create_infrastructure:
     docker:
-      - image: cimg/aws
+      - image: cimg/aws:2023.04
     steps:
       - checkout
       - run:
