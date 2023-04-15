@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   create_infrastructure:
     docker:
-      - image: cimg/aws:stable
+      - image: cimg/aws
     steps:
       - checkout
       - run:
