@@ -1,20 +1,36 @@
+---
 version: 2.1
 
 jobs:
-  create_infrastructure:
+  # # Exercise: infra creation
+  # create_infrastructure:
+  #   docker:
+  #     - image: cimg/aws:2023.04
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: "Create Cloudformation Stack"
+  #         command: |
+  #           aws cloudformation deploy \
+  #           --template-file template.yml \
+  #           --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+  #           --region us-east-1
+  # Exercise: Config and Deployment
+  configure_infrastructure:
     docker:
-      - image: cimg/aws:2023.04
+      - image: cimg/python:3.10.11
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints: ["d6:bf:ae:2b:6b:e2:4a:ab:70:9f:7e:88:5b:71:00:b4"]
       - run:
-          name: "Create Cloudformation Stack"
-          command: |
-            aws cloudformation deploy \
-            --template-file template.yml \
-            --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
-            --region us-east-1
-
+          name: Install Ansible
+          command: apk add --update ansible
+      - run:
+          name: Run Playbook and Configure server
+          command: ansible-playbook -i inventory main-remote.yml
 workflows:
   create-infrastructure-workflow:
     jobs:
-      - create_infrastructure
+      # - create_infrastructure
+      - configure_infrastructure:
