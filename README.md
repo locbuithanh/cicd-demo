@@ -1,1 +1,1 @@
-# Config and deployment
+# Config and deployment using CircleCI and Ansible
