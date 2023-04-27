@@ -44,7 +44,7 @@ jobs:
               return 0 \
             else \
               return 1 \
-            fi \
+            fi
 workflows:
   create-infrastructure-workflow:
     jobs:
