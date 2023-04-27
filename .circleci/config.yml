@@ -38,7 +38,7 @@ jobs:
       - run:
           name: Smote test
           command: |
-            URL="https://blog.udacity.com/"
+            URL="https://blog.udacity1111.com/"
             # Test if website exists
             if curl -s --head ${URL}
             then
