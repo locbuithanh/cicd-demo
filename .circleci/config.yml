@@ -34,6 +34,7 @@ jobs:
     docker:
       - image: alpine:latest
     steps:
+      - run: apk add --update curl
       - run:
           name: Smote test
           command: |
