@@ -32,18 +32,18 @@ jobs:
   # Exercise: Smoke testing
   smoke_test:
     docker:
-      - image: cimg/base:2023.04
+      - image: alpine:latest
     steps:
       - run:
           name: Smote test
           command: |
-            URL="https://blog.udacity.com/" \
-            # Test if website exists \
-            if curl -s --head ${URL} \
-            then \
-              return 0 \
-            else \
-              return 1 \
+            URL="https://blog.udacity.com/"
+            # Test if website exists
+            if curl -s --head ${URL}
+            then
+              return 0
+            else
+              return 1
             fi
 workflows:
   create-infrastructure-workflow:
