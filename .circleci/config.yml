@@ -42,7 +42,7 @@ jobs:
   # Exercise: Smoke testing
   smoke_test:
     docker:
-      - image: alpine:latest
+      - image: cimg/aws:2023.04
     steps:
       - run:
           name: Test job
