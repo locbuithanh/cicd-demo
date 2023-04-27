@@ -31,7 +31,7 @@ jobs:
   #         command: ansible-playbook -i inventory main-remote.yml
   # Exercise: Smoke testing
   smoke_test:
-    docket:
+    docker:
       - image: cimg/base:2023.04
     steps:
       - run:
