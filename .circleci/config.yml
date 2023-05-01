@@ -3,6 +3,7 @@ version: 2.1
 
 commands:
   # Exercise: Rollback
+  # test
   destroy_environment:
     steps:
       - run:
