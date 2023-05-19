@@ -257,11 +257,11 @@ jobs:
           at: ~/
       - restore_cache:
           keys: [frontend-build]
-      - run:
-          name: Install tar, gzip
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y tar gzip
+      # - run:
+      #     name: Install tar, gzip
+      #     command: |
+      #       sudo apt-get update
+      #       sudo apt-get install -y tar gzip
       - run:
           name: Install dependencies (AWS)
           command: |
