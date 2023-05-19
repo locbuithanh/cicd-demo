@@ -1,0 +1,2 @@
+[URL01] GitHub repository: https://github.com/locbuithanh/cdond-c3-projectstarter
+[URL02] Public URL for S3 Bucket (frontend): 
