@@ -14,7 +14,7 @@ commands:
       - run:
           name: Install AWS CLI
           command: |
-            if aws --version &> /dev/null
+            if aws --version | grep "aws-cli/" &> /dev/null
             then
               echo "AWS CLI is already installed"
               exit 0
