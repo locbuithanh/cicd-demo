@@ -15,12 +15,11 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name "udapeople-backend-${workflow_id}"
-            aws cloudformation wait stack-delete-complete --stack-name "udapeople-backend-${workflow_id}"
-            echo "${bucket_name}"
-            aws s3 rb "s3://${bucket_name}" --force
-            aws cloudformation delete-stack --stack-name "udapeople-frontend-${workflow_id}"
-            aws cloudformation wait stack-delete-complete --stack-name "udapeople-frontend-${workflow_id}"
+            aws cloudformation delete-stack --stack-name "udapeople-backend-<< parameters.workflow_id >>"
+            aws cloudformation wait stack-delete-complete --stack-name "udapeople-backend-<< parameters.workflow_id >>"
+            aws s3 rb "s3://<< parameters.bucket_name >>" --force
+            aws cloudformation delete-stack --stack-name "udapeople-frontend-<< parameters.workflow_id >>"
+            aws cloudformation wait stack-delete-complete --stack-name "udapeople-frontend-<< parameters.workflow_id >>"
 
 #   revert-migrations:
 #     description: Revert the last migration if successfully run in the current workflow.
