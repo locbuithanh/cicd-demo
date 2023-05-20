@@ -3,11 +3,16 @@
     path: "~/backend"
     state: "directory"
     mode: 0755
-    
+
+- name: "Copy compressed backend folder"
+  copy:
+    src: "artifact.tar.gz"
+    dest: "~/backend/artifact.tar.gz"
+
 - name: "Extract backend"
   unarchive:
     remote_src: yes
-    src: "artifact.tar.gz"
+    src: "~/backend/artifact.tar.gz"
     dest: "~/backend"
 
 - name: "Start the app"
@@ -16,4 +21,4 @@
       cd ~/backend
       npm install
       pm2 stop default
-      pm2 start npm -- start
+      pm2 start npm -- start --wait-ready
