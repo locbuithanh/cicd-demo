@@ -156,11 +156,11 @@ jobs:
       - image: cimg/aws:2023.05
     steps:
       - checkout
-      - run:
-          name: Install tar, gzip
-          command: |
-            sudo apt-get update
-            sudo apt-get install tar gzip
+      # - run:
+      #     name: Install tar, gzip
+      #     command: |
+      #       sudo apt-get update
+      #       sudo apt-get install tar gzip
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -185,9 +185,9 @@ jobs:
               --output=text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: .circleci/ansible
+          root: ~/
           paths:
-            - inventory.txt
+            - project/.circleci/ansible/inventory.txt
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
           bucket_name: "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
@@ -205,9 +205,9 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt-get update
-            sudo apt-get install -y tar gzip
+            # sudo apt-get install -y tar gzip
             python3 -m pip install --user ansible
-            pip install --user awscli
+            # pip install --user awscli
       - run:
           name: Configure server
           command: |
@@ -388,11 +388,11 @@ jobs:
               exit 1
             fi
       # Here's where you will add some code to rollback on failure
-      # - revert-migrations:
-      #     migration-key: "migration_${CIRCLE_WORKFLOW_ID:0:7}"
-      # - destroy-environment:
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      #     bucket_name: "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          migration-key: "migration_${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+          bucket_name: "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
 
 #   cloudfront-update:
 #     docker:
