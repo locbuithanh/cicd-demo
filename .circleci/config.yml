@@ -425,10 +425,11 @@ jobs:
           #   --tags project=udapeople
           # Try update instead of deploying new stack
           command: |
+            echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}" 
             aws cloudformation update-stack \
             --use-previous-template \
             --stack-name InitialStack \
-            --parameters ParameterKey=WorkflowID,ParameterValue="udapeople-${CIRCLE_WORKFLOW_ID:0:7}",UsePreviousValue=false
+            --parameters ParameterKey=WorkflowID,ParameterValue="${CIRCLE_WORKFLOW_ID:0:7}",UsePreviousValue=false
       # Here's where you will add some code to rollback on failure
       - revert-migrations:
           migration-key: "migration_${CIRCLE_WORKFLOW_ID:0:7}"
@@ -461,17 +462,17 @@ jobs:
             ## You can use any condition like:
             ## if [[ "${OldWorkflowID}" =~ "${STACKS[@]}"  ]]
             ## if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
-            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID:10}" ]]
+            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
             then
               echo "Cleaning up"
-              if [[ "${STACKS[@]}" =~ "udapeople-backend-${OldWorkflowID:10}" ]]
+              if [[ "${STACKS[@]}" =~ "udapeople-backend-${OldWorkflowID}" ]]
                 then
-                  aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID:10}"
+                  aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               fi
-              if [[ "${STACKS[@]}" =~ "udapeople-frontend-${OldWorkflowID:10}" ]]
+              if [[ "${STACKS[@]}" =~ "udapeople-frontend-${OldWorkflowID}" ]]
                 then
-                  aws s3 rm "s3://${OldWorkflowID}" --recursive
-                  aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID:10}"
+                  aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+                  aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
               fi
             else
               echo "No cleanup"
