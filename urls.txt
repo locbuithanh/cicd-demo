@@ -1,2 +1,5 @@
-[URL01] GitHub repository: https://github.com/locbuithanh/cdond-c3-projectstarter
+[URL01] GitHub repository: 
+https://github.com/locbuithanh/cdond-c3-projectstarter
+
 [URL02] Public URL for S3 Bucket (frontend): 
+http://udapeople-e9d36a0.s3-website-us-east-1.amazonaws.com
