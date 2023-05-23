@@ -442,8 +442,6 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - attach_workspace:
-          at: ~/
       - run:
           name: Get old stack workflow id
           command: |
@@ -457,12 +455,7 @@ jobs:
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
                       --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
             echo Stack names: "${STACKS[@]}"
-            echo "${OldWorkflowID}" >> id.txt
-            cat id.txt
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project/.circleci/id.txt     
+            echo "export OldWorkflowID=${OldWorkflowID}" >> $BASH_ENV
       - run:
           name: Remove old stacks and files
           command: |
@@ -472,14 +465,19 @@ jobs:
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID:0:7}" ]]
             then
               echo "Cleaning up"
-              OldWorkflowID=$(cat id.txt)
-              echo OldWorkflowID: "${OldWorkflowID}"
+              source $BASH_ENV
               aws s3 rm "s3://udapeople-${OldWorkflowID:0:7}" --recursive
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID:0:7}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID:0:7}"
             else
               echo "No cleanup"
             fi
+      # Here's where you will add some code to rollback on failure
+      - revert-migrations:
+          migration-key: "migration_${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+          bucket_name: "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
             
 workflows:
   default:
