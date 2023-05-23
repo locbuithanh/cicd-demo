@@ -428,7 +428,7 @@ jobs:
             aws cloudformation update-stack \
             --use-previous-template \
             --stack-name InitialStack \
-            --parameters ParameterKey=WorkflowID,ParameterValue="udapeople-${CIRCLE_WORKFLOW_ID:0:7}",UsePreviousValue=false
+            --parameters ParameterKey=WorkflowID,ParameterValue="${CIRCLE_WORKFLOW_ID}",UsePreviousValue=false
       # Here's where you will add some code to rollback on failure
       - revert-migrations:
           migration-key: "migration_${CIRCLE_WORKFLOW_ID:0:7}"
@@ -442,6 +442,8 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Get old stack workflow id
           command: |
@@ -454,19 +456,27 @@ jobs:
             ## Fetch the stack names          
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
                       --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
-            echo Stack names: "${STACKS[@]}" 
+            echo Stack names: "${STACKS[@]}"
+            echo "${OldWorkflowID}" >> id.txt
+            cat id.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - id.txt     
       - run:
           name: Remove old stacks and files
           command: |
             ## You can use any condition like:
             ## if [[ "${OldWorkflowID}" =~ "${STACKS[@]}"  ]]
             ## if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
-            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
+            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID:0:7}" ]]
             then
               echo "Cleaning up"
-              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+              OldWorkflowID=$(cat test.txt)
+              echo OldWorkflowID: "${OldWorkflowID}"
+              aws s3 rm "s3://udapeople-${OldWorkflowID:0:7}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID:0:7}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID:0:7}"
             else
               echo "No cleanup"
             fi
